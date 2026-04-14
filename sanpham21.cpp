@@ -1,11 +1,9 @@
 #include <iomanip>
 #include <iostream>
 #include <string>
-#include <fstream>
+
 using namespace std;
-// ================================================================
-// CLASS BacSi
-// ================================================================
+
 class BacSi
 {
 private:
@@ -163,40 +161,9 @@ public:
     }
 };
 
-// ================================================================
-// CLASS DanhMuc - Da phat trien day du
-// ================================================================
-class DanhMuc
-{
-private:
-    Thuoc dsThuoc[MAX_THUOC];
-    int soLuongThuoc;
-
-    DichVu dsDichVu[MAX_THUOC];
-    int soLuongDichVu;
-
-public:
-    DanhMuc();
-    ~DanhMuc();
-
-    void quanLy(); // Menu chinh cua phan 9
-    void themThuoc();
-    void suaThuoc();
-    void xoaThuoc();
-    void themDichVu();
-    void suaDichVu();
-    void xoaDichVu();
-    void xemDanhSach();
-    int getSoLuongThuoc() const { return soLuongThuoc; }
-    int getSoLuongDichVu() const { return soLuongDichVu; }
-    Thuoc* getThuoc(int i) { return &dsThuoc[i]; }
-    DichVu* getDichVu(int i) { return &dsDichVu[i]; }
-};
 
 const int MAX_HS = 50;
-// ================================================================
-// CLASS BenhNhan
-// ================================================================
+
 class BenhNhan
 {
 private:
@@ -274,8 +241,6 @@ private:
     PhongBenh *dsPB[MAX_SIZE];
     int slPB;
 
-    DanhMuc danhMucTraCuu;
-
     static int nhapSoNguyen(const string &prompt);
     static double nhapSoThuc(const string &prompt);
     void hienThiMenu() const;
@@ -292,10 +257,7 @@ private:
     void quanLyPhongBenh();
     void soDoGiuongBenh() const;
 
-    void quanLyDanhMuc();
     void baoCaoThongKe() const;
-    void saoLuuDuLieu();
-    void khoiPhucDuLieu();
 
 public:
     BenhVien();
@@ -442,128 +404,7 @@ void PhongBenh::xuat()
          << " - Phi/ngay: " << fixed << setprecision(0) << donGia << " VND\n";
 }
 
-// ==================== DANH MUC ====================
 
-DanhMuc::DanhMuc() : soLuongThuoc(0), soLuongDichVu(0) {}
-DanhMuc::~DanhMuc() {}
-
-void DanhMuc::xemDanhSach()
-{
-    cout << "\n--- DANH MUC THUOC (" << soLuongThuoc << " loai) ---\n";
-    if (soLuongThuoc == 0) cout << "  (Chua co thuoc nao)\n";
-    for (int i = 0; i < soLuongThuoc; i++)
-    {
-        cout << "  [" << i + 1 << "] ";
-        dsThuoc[i].xuat();
-    }
-    cout << "\n--- DANH MUC DICH VU (" << soLuongDichVu << " loai) ---\n";
-    if (soLuongDichVu == 0) cout << "  (Chua co dich vu nao)\n";
-    for (int i = 0; i < soLuongDichVu; i++)
-    {
-        cout << "  [" << i + 1 << "] ";
-        dsDichVu[i].xuat();
-    }
-}
-
-void DanhMuc::themThuoc()
-{
-    if (soLuongThuoc >= MAX_THUOC) { cout << "[!] Danh sach thuoc da day!\n"; return; }
-    cout << "\n-- Nhap thong tin thuoc moi --\n";
-    dsThuoc[soLuongThuoc].nhap();
-    soLuongThuoc++;
-    cout << "Da them thuoc thanh cong.\n";
-}
-
-void DanhMuc::suaThuoc()
-{
-    if (soLuongThuoc == 0) { cout << "[!] Chua co thuoc nao.\n"; return; }
-    xemDanhSach();
-    cout << "Nhap so thu tu thuoc can sua (1-" << soLuongThuoc << "): ";
-    int idx; cin >> idx;
-    if (idx < 1 || idx > soLuongThuoc) { cout << "[!] Chi so khong hop le.\n"; return; }
-    cout << "\n-- Nhap lai thong tin thuoc --\n";
-    dsThuoc[idx - 1].nhap();
-    cout << "Da cap nhat thuoc.\n";
-}
-
-void DanhMuc::xoaThuoc()
-{
-    if (soLuongThuoc == 0) { cout << "[!] Chua co thuoc nao.\n"; return; }
-    xemDanhSach();
-    cout << "Nhap so thu tu thuoc can xoa (1-" << soLuongThuoc << "): ";
-    int idx; cin >> idx;
-    if (idx < 1 || idx > soLuongThuoc) { cout << "[!] Chi so khong hop le.\n"; return; }
-    for (int i = idx - 1; i < soLuongThuoc - 1; i++)
-        dsThuoc[i] = dsThuoc[i + 1];
-    soLuongThuoc--;
-    cout << "Da xoa thuoc.\n";
-}
-
-void DanhMuc::themDichVu()
-{
-    if (soLuongDichVu >= MAX_THUOC) { cout << "[!] Danh sach dich vu da day!\n"; return; }
-    cout << "\n-- Nhap thong tin dich vu moi --\n";
-    dsDichVu[soLuongDichVu].nhap();
-    soLuongDichVu++;
-    cout << "Da them dich vu thanh cong.\n";
-}
-
-void DanhMuc::suaDichVu()
-{
-    if (soLuongDichVu == 0) { cout << "[!] Chua co dich vu nao.\n"; return; }
-    xemDanhSach();
-    cout << "Nhap so thu tu dich vu can sua (1-" << soLuongDichVu << "): ";
-    int idx; cin >> idx;
-    if (idx < 1 || idx > soLuongDichVu) { cout << "[!] Chi so khong hop le.\n"; return; }
-    cout << "\n-- Nhap lai thong tin dich vu --\n";
-    dsDichVu[idx - 1].nhap();
-    cout << "Da cap nhat dich vu.\n";
-}
-
-void DanhMuc::xoaDichVu()
-{
-    if (soLuongDichVu == 0) { cout << "[!] Chua co dich vu nao.\n"; return; }
-    xemDanhSach();
-    cout << "Nhap so thu tu dich vu can xoa (1-" << soLuongDichVu << "): ";
-    int idx; cin >> idx;
-    if (idx < 1 || idx > soLuongDichVu) { cout << "[!] Chi so khong hop le.\n"; return; }
-    for (int i = idx - 1; i < soLuongDichVu - 1; i++)
-        dsDichVu[i] = dsDichVu[i + 1];
-    soLuongDichVu--;
-    cout << "Da xoa dich vu.\n";
-}
-
-void DanhMuc::quanLy()
-{
-    int choice;
-    do
-    {
-        cout << "\n========== QUAN LY DANH MUC HE THONG ==========\n";
-        cout << "  1. Xem danh sach thuoc & dich vu\n";
-        cout << "  2. Them thuoc moi\n";
-        cout << "  3. Sua thong tin thuoc\n";
-        cout << "  4. Xoa thuoc\n";
-        cout << "  5. Them dich vu moi\n";
-        cout << "  6. Sua thong tin dich vu\n";
-        cout << "  7. Xoa dich vu\n";
-        cout << "  0. Quay lai menu chinh\n";
-        cout << "================================================\n";
-        cout << "Lua chon: ";
-        cin >> choice;
-        switch (choice)
-        {
-        case 1: xemDanhSach(); break;
-        case 2: themThuoc(); break;
-        case 3: suaThuoc(); break;
-        case 4: xoaThuoc(); break;
-        case 5: themDichVu(); break;
-        case 6: suaDichVu(); break;
-        case 7: xoaDichVu(); break;
-        case 0: cout << "Quay lai menu chinh.\n"; break;
-        default: cout << "[!] Lua chon khong hop le!\n";
-        }
-    } while (choice != 0);
-}
 
 // ==================== THUOC ====================
 
@@ -856,7 +697,7 @@ ostream &operator<<(ostream &out, const BenhNhan &bn)
 
 int BenhNhan::quyTrinhKhamBenh()
 {
-    cout << "\n--- QUY TRINH KHAM BENH CHO " << ten << " ---\n";
+    cout << "\n--- QUY TRINH KHAM BENH CHO BENH NHAN " << ten << " ---\n";
     cout << "Nhap ma bac si kham: ";
     cin >> maBacSiKCB;
 
@@ -870,8 +711,8 @@ int BenhNhan::quyTrinhKhamBenh()
     getline(cin >> ws, chanDoan);
 
     cout << "\nDanh gia ket qua cua bac si - Muc do tinh trang benh:\n";
-    cout << "  1. NANG => Phai NHAP VIEN dieu tri noi tru.\n";
-    cout << "  2. NHE  => Ke thuoc, xuat hoa don va DI VE.\n";
+    cout << "  1. Nang => Phai NHAP VIEN dieu tri noi tru.\n";
+    cout << "  2. Nhe => Ke thuoc, xuat hoa don va dieu tri ngoai tru.\n";
     cout << "Chon danh gia (1 hoac 2): ";
     int mucDo;
     cin >> mucDo;
@@ -1076,10 +917,7 @@ void BenhVien::hienThiMenu() const
     cout << "  7. Quan ly phong benh (Them/Sua/Xoa)\n";
     cout << "  8. So do phan bo giuong benh\n\n";
     cout << "  --- III. HE THONG & THONG KE ---\n";
-    cout << "  9. Quan ly danh muc (Thuoc & Dich vu)\n";
-    cout << "  10. Bao cao tong doanh thu\n";
-    cout << "  11. Sao luu he thong ra File (.txt)\n";
-    cout << "  12. Khoi phuc du lieu tu File\n";
+    cout << "  9. Bao cao tong doanh thu\n";
     cout << "  0. Thoat chuong trinh\n";
     cout << "==========================================================\n";
 }
@@ -1392,10 +1230,7 @@ void BenhVien::soDoGiuongBenh() const
          << " | Con trong: " << tongGiuong - tongDaNhan << "\n";
 }
 
-void BenhVien::quanLyDanhMuc()
-{
-    danhMucTraCuu.quanLy();
-}
+
 
 void BenhVien::baoCaoThongKe() const
 {
@@ -1425,114 +1260,7 @@ void BenhVien::baoCaoThongKe() const
     cout << "============================================\n";
 }
 
-void BenhVien::saoLuuDuLieu()
-{
-    string tenFile = "benhvien_backup.txt";
-    ofstream f(tenFile);
-    if (!f.is_open())
-    {
-        cout << "[!] Khong the mo file de ghi: " << tenFile << "\n";
-        return;
-    }
 
-    // Ghi bac si
-    f << "[BAC_SI]\n";
-    f << slBS << "\n";
-    for (int i = 0; i < slBS; i++)
-    {
-        f << dsBS[i]->getMaBS() << "\n";
-        f << dsBS[i]->getHoTen() << "\n";
-        f << dsBS[i]->getNghiepVu() << "\n";
-        f << dsBS[i]->getChuyenKhoa() << "\n";
-        f << dsBS[i]->getHocVi() << "\n";
-        f << dsBS[i]->getQuyenHan() << "\n";
-    }
-
-    // Ghi benh nhan (thong tin co ban)
-    f << "[BENH_NHAN]\n";
-    f << slBN << "\n";
-    for (int i = 0; i < slBN; i++)
-    {
-        f << dsBN[i]->getMaBN() << "\n";
-        f << dsBN[i]->getTen() << "\n";
-        f << dsBN[i]->getTuoi() << "\n";
-        f << dsBN[i]->getDiaChi() << "\n";
-        f << dsBN[i]->getLoaiBenhAn() << "\n";
-        f << dsBN[i]->getMaPhongLuuTru() << "\n";
-        f << fixed << setprecision(0) << dsBN[i]->tinhTongVienPhi() << "\n";
-    }
-
-    f.close();
-    cout << "Da sao luu du lieu vao file: " << tenFile << "\n";
-    cout << " > " << slBS << " bac si | " << slBN << " benh nhan\n";
-}
-
-void BenhVien::khoiPhucDuLieu()
-{
-    string tenFile = "benhvien_backup.txt";
-    ifstream f(tenFile);
-    if (!f.is_open())
-    {
-        cout << "[!] Khong tim thay file: " << tenFile << "\n";
-        cout << "    Hay chay chuc nang 'Sao luu' truoc!\n";
-        return;
-    }
-
-    string line;
-    getline(f, line); // [BAC_SI]
-    if (line != "[BAC_SI]")
-    {
-        cout << "[!] File khong dung dinh dang!\n";
-        f.close();
-        return;
-    }
-
-    // Doc so bac si (chi doc thong tin, khong tao lai doi tuong de tranh trung lap voi du lieu san co)
-    int soBS = 0;
-    f >> soBS;
-    f.ignore();
-    cout << "File backup chua " << soBS << " bac si va ";
-
-    // Bỏ qua các dòng bác sĩ
-    for (int i = 0; i < soBS; i++)
-    {
-        string tmp;
-        getline(f, tmp); // maBS
-        getline(f, tmp); // hoTen
-        getline(f, tmp); // nghiepVu
-        getline(f, tmp); // chuyenKhoa
-        getline(f, tmp); // hocVi
-        getline(f, tmp); // quyenHan
-    }
-
-    getline(f, line); // [BENH_NHAN]
-    int soBN = 0;
-    f >> soBN;
-    f.ignore();
-    cout << soBN << " benh nhan.\n";
-
-    // Doc va in thong tin benh nhan
-    cout << "\nDanh sach benh nhan tu file backup:\n";
-    for (int i = 0; i < soBN; i++)
-    {
-        string maBNStr, ten, tuoiStr, diaChi, loaiBenhAn, maPhong, tongPhiStr;
-        getline(f, maBNStr);
-        getline(f, ten);
-        getline(f, tuoiStr);
-        getline(f, diaChi);
-        getline(f, loaiBenhAn);
-        getline(f, maPhong);
-        getline(f, tongPhiStr);
-        cout << "  [" << i + 1 << "] Ma BN: " << maBNStr
-             << " | " << ten
-             << " | " << loaiBenhAn
-             << " | Phi: " << tongPhiStr << " VND\n";
-    }
-
-    f.close();
-    cout << "\nDu lieu da duoc doc tu file: " << tenFile << "\n";
-    cout << "[INFO] De khoi phuc toan bo, khoi dong lai chuong trinh voi file du lieu.\n";
-}
 
 void BenhVien::chay()
 {
@@ -1540,7 +1268,7 @@ void BenhVien::chay()
     do
     {
         hienThiMenu();
-        choice = nhapSoNguyen("Lua chon cua ban (0-12): ");
+        choice = nhapSoNguyen("Lua chon cua ban (0-9): ");
         switch (choice)
         {
         case 1:  themHoSoBenhNhan(); break;
@@ -1551,10 +1279,7 @@ void BenhVien::chay()
         case 6:  thaoTacBacSi(); break;
         case 7:  quanLyPhongBenh(); break;
         case 8:  soDoGiuongBenh(); break;
-        case 9:  quanLyDanhMuc(); break;
-        case 10: baoCaoThongKe(); break;
-        case 11: saoLuuDuLieu(); break;
-        case 12: khoiPhucDuLieu(); break;
+        case 9:  baoCaoThongKe(); break;
         case 0:  cout << "\nDong he thong. Tam biet!\n"; break;
         default: cout << "[!] Lua chon khong hop le!\n";
         }
