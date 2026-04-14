@@ -21,8 +21,8 @@ private:
 public:
     // ---- Constructors ----
     BacSi();
-    BacSi(string ht, string nv, string ck,
-          string hv, string qh);
+    BacSi(string hoTen, string nghiepVu, string chuyenKhoa,
+          string hocVi, string quyenHan);
 
     // ---- Destructor ----
     ~BacSi();
@@ -64,7 +64,7 @@ private:
 
 public:
     PhongBenh();
-    PhongBenh(string mp, string tp, string lp, int sg);
+    PhongBenh(string maPhong, string tenPhong, string loaiPhong, int soGiuong);
     ~PhongBenh();
 
     string getMaPhong();
@@ -93,7 +93,7 @@ private:
 
 public:
     Thuoc();
-    Thuoc(string tt, int sl, double g);
+    Thuoc(string tenThuoc, int soLuong, double gia);
     ~Thuoc();
 
     // Getter
@@ -122,7 +122,7 @@ private:
 
 public:
     HoaDon();
-    HoaDon(int mbn);
+    HoaDon(int maBN);
     ~HoaDon();
 
     // Getter
@@ -214,7 +214,7 @@ private:
 
 public:
     BenhNhan();
-    BenhNhan(string t, int tuoi_bn, string dc);
+    BenhNhan(string ten, int tuoi, string diaChi);
     ~BenhNhan();
 
     // Getter
@@ -306,10 +306,10 @@ BacSi::BacSi()
       chuyenKhoa(""), hocVi(""), quyenHan("") {}
 
 // ---- Constructor co tham so ----
-BacSi::BacSi(string ht, string nv, string ck,
-             string hv, string qh)
-    : maBS(dem++), hoTen(ht), nghiepVu(nv),
-      chuyenKhoa(ck), hocVi(hv), quyenHan(qh) {}
+BacSi::BacSi(string hoTen, string nghiepVu, string chuyenKhoa,
+             string hocVi, string quyenHan)
+    : maBS(dem++), hoTen(hoTen), nghiepVu(nghiepVu),
+      chuyenKhoa(chuyenKhoa), hocVi(hocVi), quyenHan(quyenHan) {}
 
 // ---- Destructor ----
 BacSi::~BacSi() {}
@@ -386,12 +386,12 @@ ostream &operator<<(ostream &out, const BacSi &bs)
 
 PhongBenh::PhongBenh() : maPhong(""), tenPhong(""), loaiPhong("Thuong"), soGiuong(0), soGiuongDaNhan(0) {}
 
-PhongBenh::PhongBenh(string mp, string tp, string lp, int sg)
+PhongBenh::PhongBenh(string maPhong, string tenPhong, string loaiPhong, int soGiuong)
 {
-    this->maPhong = mp;
-    this->tenPhong = tp;
-    this->loaiPhong = lp;
-    this->soGiuong = sg;
+    this->maPhong = maPhong;
+    this->tenPhong = tenPhong;
+    this->loaiPhong = loaiPhong;
+    this->soGiuong = soGiuong;
     this->soGiuongDaNhan = 0;
 }
 
@@ -489,11 +489,11 @@ void DanhMuc::xemDanhSach()
 // ================== THUOC ==================
 Thuoc::Thuoc() : tenThuoc(""), soLuong(0), gia(0) {}
 
-Thuoc::Thuoc(string tt, int sl, double g)
+Thuoc::Thuoc(string tenThuoc, int soLuong, double gia)
 {
-    this->tenThuoc = tt;
-    setSoLuong(sl);
-    setGia(g);
+    this->tenThuoc = tenThuoc;
+    setSoLuong(soLuong);
+    setGia(gia);
 }
 
 Thuoc::~Thuoc() {}
@@ -550,7 +550,7 @@ void Thuoc::xuat() const
 HoaDon::HoaDon() : maBN(0), soLuongThuoc(0), tongTien(0) {}
 
 // Loi #10: constructor co ma benh nhan
-HoaDon::HoaDon(int mbn) : maBN(mbn), soLuongThuoc(0), tongTien(0) {}
+HoaDon::HoaDon(int maBN) : maBN(maBN), soLuongThuoc(0), tongTien(0) {}
 
 // Loi #2: Destructor KHONG in gi (tranh spam)
 HoaDon::~HoaDon() {}
@@ -645,12 +645,12 @@ BenhNhan::BenhNhan() : tenBenh(""), loaiBenhAn(""), chanDoan(""), maBacSiKCB(0),
     this->diaChi = "";
 }
 
-BenhNhan::BenhNhan(string t, int tuoi_bn, string dc) : tenBenh(""), loaiBenhAn(""), chanDoan(""), maBacSiKCB(0), ngayVaoVien(""), ngayRaVien(""), soNgayDieuTri(0), maPhongLuuTru(""), soGiuongLuuTru(0), slHoaDon(0)
+BenhNhan::BenhNhan(string ten, int tuoi, string diaChi) : tenBenh(""), loaiBenhAn(""), chanDoan(""), maBacSiKCB(0), ngayVaoVien(""), ngayRaVien(""), soNgayDieuTri(0), maPhongLuuTru(""), soGiuongLuuTru(0), slHoaDon(0)
 {
     this->maBN = dem++;
-    this->ten = t;
-    this->tuoi = tuoi_bn;
-    this->diaChi = dc;
+    this->ten = ten;
+    this->tuoi = tuoi;
+    this->diaChi = diaChi;
 }
 
 BenhNhan::~BenhNhan()
@@ -891,42 +891,27 @@ BenhVien::BenhVien() : slBN(0), slBS(0), slHD(0), slPB(0)
         string ma = "V0" + to_string(i);
         dsPB[slPB++] = new PhongBenh(ma, "Phong VIP", "VIP", 1);
     }
-
-    // Yeu cau tu dong nap san 20 bac si voi cac chuyen nganh khac nhau
-    string hoTenBS[] = {
-        "Nguyen Van An", "Tran Thi Binh", "Le Van Cuong", "Pham Thi Dung", "Hoang Van Em",
-        "Vu Thi Ha", "Dang Van Giang", "Bui Thi Hanh", "Do Van Ich", "Ngo Thi Kieu",
-        "Duong Van Long", "Ly Thi Mai", "Phan Van Nam", "Mac Thi Oanh", "Vuong Van Phong",
-        "Truong Thi Quy", "Nhan Van Sang", "Lam Thi Tuyen", "Chau Van Uy", "Dinh Thi Yen"
-    };
-    string nghiepVuBS[] = {
-        "Noi khoa", "Ngoai khoa", "Noi khoa", "Ngoai khoa", "Nhi khoa",
-        "San khoa", "Truyen nhiem", "Da lieu", "Mat", "Tai Mui Hong",
-        "Rang Ham Mat", "Than kinh", "Tim mach", "Tieu hoa", "Ho hap",
-        "Chinh hinh", "Ung buou", "Tham my", "Noi khoa", "Ngoai khoa"
-    };
-    string chuyenKhoaBS[] = {
-        "Tim mach", "Chinh hinh", "Tieu hoa", "Than kinh", "So sinh",
-        "San khoa", "Truyen nhiem", "Da lieu", "Khuc xa", "Tai",
-        "Chinh nha", "Dot quy", "Tim mach", "Tieu hoa", "Ho hap",
-        "Chinh hinh", "Ung buou", "Tham my", "Noi tiet", "Ngoai than kinh"
-    };
-    string hocViBS[] = {
-        "Tien si", "Thac si", "Bac si", "Tien si", "Thac si",
-        "Bac si", "Tien si", "Thac si", "Bac si", "Tien si",
-        "Thac si", "Bac si", "Tien si", "Thac si", "Bac si",
-        "Tien si", "Thac si", "Bac si", "Tien si", "Thac si"
-    };
-    string quyenHanBS[] = {
-        "Truong khoa", "Pho khoa", "Bac si dieu tri", "Truong khoa", "Pho khoa",
-        "Bac si dieu tri", "Truong khoa", "Pho khoa", "Bac si dieu tri", "Truong khoa",
-        "Pho khoa", "Bac si dieu tri", "Truong khoa", "Pho khoa", "Bac si dieu tri",
-        "Truong khoa", "Pho khoa", "Bac si dieu tri", "Truong khoa", "Pho khoa"
-    };
-    for (int i = 0; i < 20; i++)
-    {
-        dsBS[slBS++] = new BacSi(hoTenBS[i], nghiepVuBS[i], chuyenKhoaBS[i], hocViBS[i], quyenHanBS[i]);
-    }
+    // 20 bac si 
+    dsBS[slBS++] = new BacSi("Nguyen Van An", "Noi khoa", "Tim mach", "Tien si", "Truong khoa");
+    dsBS[slBS++] = new BacSi("Nguyen Van Bao", "Ngoai khoa", "Phau thuat tong hop", "Tien si", "Pho khoa");
+    dsBS[slBS++] = new BacSi("Nguyen Van Vu", "San phu khoa", "Phu khoa", "Thac si", "Bac si dieu tri");
+    dsBS[slBS++] = new BacSi("Nguyen Thi Dung", "Than kinh", "Than kinh trung uong", "Thac si", "Bac si dieu tri");
+    dsBS[slBS++] = new BacSi("Tran Van Anh", "Nhi khoa", "Nhi khoa tong hop", "Tien si", "Pho khoa");
+    dsBS[slBS++] = new BacSi("Than Van Chien", "Tay xuong khop", "Chot tay", "Thac si", "Bac si dieu tri");
+    dsBS[slBS++] = new BacSi("Chu Van Tai", "Mat khoa", "Mat khoa", "Tien si", "Truong khoa");
+    dsBS[slBS++] = new BacSi("Bui Thi Ha", "Tai mui hong", "Tai mui hong", "Thac si", "Bac si dieu tri");
+    dsBS[slBS++] = new BacSi("Ngo Van Hung", "Rang ham mat", "Rang ham mat", "Thac si", "Bac si dieu tri");
+    dsBS[slBS++] = new BacSi("Cao Thi Huong", "Da lieu", "Da lieu", "Thac si", "Bac si dieu tri");
+    dsBS[slBS++] = new BacSi("Ngo Thi Trang", "Noi khoa", "Tieu hoa - Gan", "Thac si", "Bac si dieu tri");
+    dsBS[slBS++] = new BacSi("Dao Thi Linh", "Ngoai khoa", "Ung thu", "Tien si", "Pho khoa");
+    dsBS[slBS++] = new BacSi("Ha Van Khanh", "Phuong champs tac y", "Phau thuat tham my", "Tien si", "Truong khoa");
+    dsBS[slBS++] = new BacSi("Ha Thi Ngoc", "Noi tang", "Mach mau - Khoi u", "Thac si", "Bac si dieu tri");
+    dsBS[slBS++] = new BacSi("La Van Phuong", "Benh truyền nhiem", "Benh truyền nhiem", "Thac si", "Bac si dieu tri");
+    dsBS[slBS++] = new BacSi("Duong Thi Oanh", "Chuyen khoa Y tam ly", "Benh tam ly", "Thac si", "Bac si dieu tri");
+    dsBS[slBS++] = new BacSi("Doan Van Quang", "Noi khoa", "Tiet nieu - Huyet ap", "Thac si", "Bac si dieu tri");
+    dsBS[slBS++] = new BacSi("Vu Van Tuan", "Ngoai khoa", "Nhan khoa", "Thac si", "Bac si dieu tri");
+    dsBS[slBS++] = new BacSi("Truong Van Sang", "San phu khoa", "Vo sinh", "Tien si", "Pho khoa");
+    dsBS[slBS++] = new BacSi("Vo Thi Lan", "Nhi khoa", "Soi sinh", "Thac si", "Bac si dieu tri");
 }
 
 BenhVien::~BenhVien()
