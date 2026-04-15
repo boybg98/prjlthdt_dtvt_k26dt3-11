@@ -241,6 +241,9 @@ private:
     PhongBenh *dsPB[MAX_SIZE];
     int slPB;
 
+    Thuoc dsThuoc[MAX_THUOC];
+    int slThuoc;
+
     static int nhapSoNguyen(const string &prompt);
     static double nhapSoThuc(const string &prompt);
     void hienThiMenu() const;
@@ -256,6 +259,9 @@ private:
 
     void quanLyPhongBenh();
     void soDoGiuongBenh() const;
+
+    void quanLyThuoc();
+    void xemDanhSachThuoc() const;
 
     void baoCaoThongKe() const;
 
@@ -820,7 +826,7 @@ double BenhNhan::tinhTongVienPhi() const
 
 // ==================== BENH VIEN ====================
 
-BenhVien::BenhVien() : slBN(0), slBS(0), slHD(0), slPB(0)
+BenhVien::BenhVien() : slBN(0), slBS(0), slHD(0), slPB(0), slThuoc(0)
 {
     for (int i = 0; i < MAX_SIZE; i++)
     {
@@ -862,6 +868,28 @@ BenhVien::BenhVien() : slBN(0), slBS(0), slHD(0), slPB(0)
     dsBS[slBS++] = new BacSi("Vu Van Tuan",      "Ngoai khoa",     "Phau thuat nao",        "Thac si", "Bac si dieu tri");
     dsBS[slBS++] = new BacSi("Truong Van Sang",  "San phu khoa",   "Vo sinh - Hiem muon",   "Tien si", "Pho khoa");
     dsBS[slBS++] = new BacSi("Vo Thi Lan",       "Nhi khoa",       "So sinh - Cap cuu Nhi", "Thac si", "Bac si dieu tri");
+
+    // ==================== 20 LOAI THUOC MAU ====================
+    dsThuoc[slThuoc++] = Thuoc("Paracetamol 500mg",          100, 2000);
+    dsThuoc[slThuoc++] = Thuoc("Amoxicillin 500mg",           80,  8000);
+    dsThuoc[slThuoc++] = Thuoc("Ibuprofen 400mg",             120, 5000);
+    dsThuoc[slThuoc++] = Thuoc("Omeprazole 20mg",             60,  12000);
+    dsThuoc[slThuoc++] = Thuoc("Cetirizine 10mg",             90,  4000);
+    dsThuoc[slThuoc++] = Thuoc("Metformin 500mg",             70,  6000);
+    dsThuoc[slThuoc++] = Thuoc("Amlodipine 5mg",              50,  9000);
+    dsThuoc[slThuoc++] = Thuoc("Atorvastatin 20mg",           40,  15000);
+    dsThuoc[slThuoc++] = Thuoc("Azithromycin 250mg",          30,  25000);
+    dsThuoc[slThuoc++] = Thuoc("Dexamethasone 0.5mg",         100, 3000);
+    dsThuoc[slThuoc++] = Thuoc("Vitamin C 1000mg",            200, 2500);
+    dsThuoc[slThuoc++] = Thuoc("Ciprofloxacin 500mg",         50,  18000);
+    dsThuoc[slThuoc++] = Thuoc("Losartan 50mg",               60,  11000);
+    dsThuoc[slThuoc++] = Thuoc("Prednisolone 5mg",            80,  4500);
+    dsThuoc[slThuoc++] = Thuoc("Metronidazole 250mg",         75,  5500);
+    dsThuoc[slThuoc++] = Thuoc("Salbutamol 4mg",              90,  6500);
+    dsThuoc[slThuoc++] = Thuoc("Furosemide 40mg",             55,  7000);
+    dsThuoc[slThuoc++] = Thuoc("Clopidogrel 75mg",            45,  22000);
+    dsThuoc[slThuoc++] = Thuoc("Pantoprazole 40mg",           65,  14000);
+    dsThuoc[slThuoc++] = Thuoc("Levofloxacin 500mg",          35,  30000);
 }
 
 BenhVien::~BenhVien()
@@ -917,7 +945,10 @@ void BenhVien::hienThiMenu() const
     cout << "  7. Quan ly phong benh (Them/Sua/Xoa)\n";
     cout << "  8. So do phan bo giuong benh\n\n";
     cout << "  --- III. HE THONG & THONG KE ---\n";
-    cout << "  9. Bao cao tong doanh thu\n";
+    cout << "  9. Bao cao tong doanh thu\n\n";
+    cout << "  --- IV. QUAN LY THUOC ---\n";
+    cout << "  10. Xem danh sach thuoc\n";
+    cout << "  11. Quan ly thuoc (Them/Sua/Xoa)\n\n";
     cout << "  0. Thoat chuong trinh\n";
     cout << "==========================================================\n";
 }
@@ -1231,6 +1262,76 @@ void BenhVien::soDoGiuongBenh() const
 }
 
 
+void BenhVien::xemDanhSachThuoc() const
+{
+    cout << "\n--- DANH SACH THUOC TRONG KHO (" << slThuoc << " loai) ---\n";
+    if (slThuoc == 0) { cout << "  (Chua co thuoc nao trong kho)\n"; return; }
+    cout << left
+         << setw(4)  << "STT"
+         << setw(30) << "Ten thuoc"
+         << setw(12) << "So luong"
+         << setw(16) << "Don gia (VND)"
+         << "Thanh tien (VND)" << "\n";
+    cout << string(80, '-') << "\n";
+    for (int i = 0; i < slThuoc; i++)
+    {
+        cout << left
+             << setw(4)  << i + 1
+             << setw(30) << dsThuoc[i].getTenThuoc()
+             << setw(12) << dsThuoc[i].getSoLuong()
+             << setw(16) << fixed << setprecision(0) << dsThuoc[i].getGia()
+             << fixed << setprecision(0) << dsThuoc[i].getSoLuong() * dsThuoc[i].getGia()
+             << " VND\n";
+    }
+    cout << string(80, '-') << "\n";
+}
+
+void BenhVien::quanLyThuoc()
+{
+    cout << "\n--- QUAN LY THUOC ---\n";
+    cout << "  1. Them thuoc moi\n";
+    cout << "  2. Cap nhat so luong / gia thuoc\n";
+    cout << "  3. Xoa thuoc\n";
+    cout << "  0. Quay lai\n";
+    int choice = nhapSoNguyen("Lua chon: ");
+
+    if (choice == 1)
+    {
+        if (slThuoc >= MAX_THUOC) { cout << "[!] Kho thuoc da day!\n"; return; }
+        cout << "\nNhap thong tin thuoc moi:\n";
+        dsThuoc[slThuoc].nhap();
+        slThuoc++;
+        cout << "Da them thuoc thanh cong (tong: " << slThuoc << " loai).\n";
+    }
+    else if (choice == 2 || choice == 3)
+    {
+        if (slThuoc == 0) { cout << "[!] Chua co thuoc nao!\n"; return; }
+        xemDanhSachThuoc();
+        int stt = nhapSoNguyen("Nhap STT thuoc can thao tac (0 de quay lai): ");
+        if (stt == 0) return;
+        if (stt < 1 || stt > slThuoc) { cout << "[!] STT khong hop le!\n"; return; }
+        int index = stt - 1;
+        if (choice == 2)
+        {
+            cout << "Cap nhat thuoc: " << dsThuoc[index].getTenThuoc() << "\n";
+            dsThuoc[index].nhap();
+            cout << "Da cap nhat thanh cong.\n";
+        }
+        else
+        {
+            cout << "Xoa thuoc: " << dsThuoc[index].getTenThuoc() << "? (y/n): ";
+            string xn; cin >> xn;
+            if (xn == "y" || xn == "Y")
+            {
+                for (int i = index; i < slThuoc - 1; i++)
+                    dsThuoc[i] = dsThuoc[i + 1];
+                slThuoc--;
+                cout << "Da xoa thuoc.\n";
+            }
+            else cout << "Huy thao tac.\n";
+        }
+    }
+}
 
 void BenhVien::baoCaoThongKe() const
 {
@@ -1268,7 +1369,7 @@ void BenhVien::chay()
     do
     {
         hienThiMenu();
-        choice = nhapSoNguyen("Lua chon cua ban (0-9): ");
+        choice = nhapSoNguyen("Lua chon cua ban (0-11): ");
         switch (choice)
         {
         case 1:  themHoSoBenhNhan(); break;
@@ -1280,6 +1381,8 @@ void BenhVien::chay()
         case 7:  quanLyPhongBenh(); break;
         case 8:  soDoGiuongBenh(); break;
         case 9:  baoCaoThongKe(); break;
+        case 10: xemDanhSachThuoc(); break;
+        case 11: quanLyThuoc(); break;
         case 0:  cout << "\nDong he thong. Tam biet!\n"; break;
         default: cout << "[!] Lua chon khong hop le!\n";
         }
